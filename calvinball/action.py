@@ -4,7 +4,7 @@ class Action(object):
     """Action in a Calvinball game."""
 
     def __init__(self, action_string):
-        self.tokens = action_string.split(' ', 4)
+        self.tokens = action_string.split(' ', 2)
         if len(self.tokens) != 3:
             raise ValueError('expected 3 tokens in action_string')
         self.verb = self.tokens[0].lower()

@@ -4,7 +4,8 @@ class Rule(object):
     """Rule in a Calvinball game."""
 
     def __init__(self, rule_string):
-        self.tokens = rule_string.split(' ', 4)
+        self.tokens = rule_string.split(' ', 3)
+        print self.tokens
         if len(self.tokens) != 4:
             raise ValueError('expected 4 tokens in rule_string')
         self.modal = self.tokens[0].lower()
