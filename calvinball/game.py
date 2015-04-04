@@ -1,6 +1,6 @@
 """State of a Calvinball game."""
 
-class Calvinball(object):
+class Game(object):
     """State of a Calvinball game."""
 
     def __init__(self):
