@@ -3,8 +3,9 @@
 class Game(object):
     """State of a Calvinball game."""
 
-    def __init__(self):
+    def __init__(self, language):
         self.__rules = []
+        self.__language = language
 
     def add_rule(self, rule):
         """Add rule to game."""
