@@ -3,29 +3,28 @@
 class Rule(object):
     """Rule in a Calvinball game."""
 
-    def __init__(self, rule_string, language):
+    def __init__(self, rule_string):
         self.tokens = rule_string.split(' ', 4)
         if len(self.tokens) != 4:
             raise ValueError('expected 4 tokens in rule_string')
-
         self.modal = self.tokens[0].lower()
         self.verb = self.tokens[1].lower()
         self.preposition = self.tokens[2].lower()
         self.object = self.tokens[3].lower()
 
-        if not language.valid_modal(self.modal):
-            raise ValueError('invalid modal "{0}"'.format(self.modal))
-        if not language.valid_verb(self.verb):
-            raise ValueError('invalid verb "{0}"'.format(self.verb))
-        if not language.valid_preposition(self.preposition):
-            raise ValueError('invalid preposition "{0}"'.format(self.preposition))
-        if not language.valid_object(self.object):
-            raise ValueError('invalid object "{0}"'.format(self.object))
-
     def allows(self, action):
         """Returns true if this rule allows the action."""
-        return True
+        return not self.forbids(action)
 
     def forbids(self, action):
         """Returns true if this rule forbids the action."""
-        return True
+        return (self.modal == "cannot" and
+                self.verb == action.verb and
+                self.preposition == action.preposition and
+                self.object == action.preposition)
+
+    def is_valid(self, language):
+        """Returns true if the action is valid according to the language."""
+        return (self.verb in language.verbs and
+                self.preposition in language.prepositions and
+                self.object in language.objects)
