@@ -8,10 +8,10 @@ class Rule(object):
         if len(self.tokens) != 4:
             raise ValueError('expected 4 tokens in rule_string')
 
-        self.modal = self.tokens[0].upper()
-        self.verb = self.tokens[1].upper()
-        self.preposition = self.tokens[2].upper()
-        self.object = self.tokens[3].upper()
+        self.modal = self.tokens[0].lower()
+        self.verb = self.tokens[1].lower()
+        self.preposition = self.tokens[2].lower()
+        self.object = self.tokens[3].lower()
 
         if not language.valid_modal(self.modal):
             raise ValueError('invalid modal "{0}"'.format(self.modal))
