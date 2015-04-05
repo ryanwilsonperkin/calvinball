@@ -4,6 +4,14 @@ import json
 
 from rule import Rule
 
+class DuplicateRuleException(Exception):
+    """Thrown when a rule is added that already exists."""
+    pass
+
+class NonexistentRuleException(Exception):
+    """Thrown when a rule is removed that doesn't exist."""
+    pass
+
 class Game(object):
     """State of a Calvinball game."""
 
@@ -12,11 +20,17 @@ class Game(object):
 
     def add_rule(self, rule):
         """Add rule to game."""
-        self.rules.append(rule)
+        if rule in self.rules:
+            raise DuplicateRuleException
+        else:
+            self.rules.append(rule)
 
     def remove_rule(self, rule):
         """Remove rule from game."""
-        self.rules.remove(rule)
+        if rule in self.rules:
+            self.rules.remove(rule)
+        else:
+            raise NonexistentRuleException
 
     def get_rules(self):
         """Get list of current rules."""

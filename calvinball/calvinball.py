@@ -8,7 +8,7 @@ import logging.config
 import os
 
 from action import Action
-from game import Game
+from game import Game, DuplicateRuleException, NonexistentRuleException
 from language import Language
 from rule import Rule
 
@@ -25,7 +25,11 @@ def add_rule(game, language, rule_string):
     """Add a new rule to the database."""
     rule = Rule.parse(rule_string)
     if language.valid_rule(rule):
-        game.add_rule(rule)
+        try:
+            game.add_rule(rule)
+        except DuplicateRuleException:
+            LOGGER.error('attempt to add duplicate rule "%s"', rule)
+            print('Rule exists.')
     else:
         print('Invalid rule.')
 
@@ -33,7 +37,11 @@ def remove_rule(game, language, rule_string):
     """Remove a rule from the database."""
     rule = Rule.parse(rule_string)
     if language.valid_rule(rule):
-        game.remove_rule(rule)
+        try:
+            game.remove_rule(rule)
+        except NonexistentRuleException:
+            LOGGER.error('attempt to remove nonexistent rule "%s"', rule)
+            print('Rule does not exits.')
     else:
         print('Invalid rule.')
 
