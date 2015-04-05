@@ -8,6 +8,9 @@ class Action(object):
         self.preposition = preposition
         self.object = obj
 
+    def __repr__(self):
+        return '{0}({1})'.format(self.__class__, self.__dict__)
+
     @classmethod
     def parse(cls, action_string):
         """Parse action_string into VERB PREPOSITION OBJECT for new Action."""

@@ -12,6 +12,9 @@ class Rule(object):
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
 
+    def __repr__(self):
+        return '{0}({1})'.format(self.__class__, self.__dict__)
+
     def allows(self, action):
         """Returns true if this rule allows the action."""
         return not self.forbids(action)
