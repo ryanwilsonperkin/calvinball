@@ -14,18 +14,18 @@ GAME_FILE = os.path.join(DATA_DIR, 'calvinball.json')
 
 def add_rule(game, rule_string):
     """Add a new rule to the database."""
-    rule = Rule(rule_string)
+    rule = Rule.parse(rule_string)
     game.add_rule(rule)
 
 def remove_rule(game, rule_string):
     """Remove a rule from the database."""
-    rule = Rule(rule_string)
+    rule = Rule.parse(rule_string)
     game.remove_rule(rule)
 
 def evaluate(game, action_string):
     """Evaluate an action."""
-    action = Action(action_string)
-    game.evalue(action)
+    action = Action.parse(action_string)
+    game.evaluate(action)
 
 def main():
     """Play a game of calvinball."""

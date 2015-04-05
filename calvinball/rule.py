@@ -5,15 +5,11 @@ import json
 class Rule(object):
     """Rule in a Calvinball game."""
 
-    def __init__(self, rule_string):
-        self.tokens = rule_string.split(' ', 3)
-        print self.tokens
-        if len(self.tokens) != 4:
-            raise ValueError('expected 4 tokens in rule_string')
-        self.modal = self.tokens[0].lower()
-        self.verb = self.tokens[1].lower()
-        self.preposition = self.tokens[2].lower()
-        self.object = self.tokens[3].lower()
+    def __init__(self, modal, verb, preposition, obj):
+        self.modal = modal
+        self.verb = verb
+        self.preposition = preposition
+        self.object = obj
 
     def allows(self, action):
         """Returns true if this rule allows the action."""
@@ -35,3 +31,11 @@ class Rule(object):
     def to_json(self):
         """Serialize this Rule instance to JSON."""
         return json.dumps(self, default=lambda o: o.__dict__, indent=4)
+
+    @classmethod
+    def parse(cls, rule_string):
+        """Parse rule_string into MODAL VERB PREPOSITION OBJECT for new Rule."""
+        tokens = rule_string.split(' ', 3)
+        if len(tokens) != 4:
+            raise ValueError('expected 4 tokens in rule_string')
+        return cls(*(token.lower() for token in tokens))
