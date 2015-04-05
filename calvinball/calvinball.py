@@ -1,7 +1,10 @@
 """Play a game of Calvinball."""
 
+from __future__ import print_function
+
 import argparse
 import os
+import sys
 
 from action import Action
 from game import Game
@@ -18,7 +21,7 @@ def add_rule(game, language, rule_string):
     if language.valid_rule(rule):
         game.add_rule(rule)
     else:
-        print 'Invalid rule.'
+        print('Invalid rule.')
 
 def remove_rule(game, language, rule_string):
     """Remove a rule from the database."""
@@ -26,7 +29,7 @@ def remove_rule(game, language, rule_string):
     if language.valid_rule(rule):
         game.remove_rule(rule)
     else:
-        print 'Invalid rule.'
+        print('Invalid rule.')
 
 def evaluate(game, language, action_string):
     """Evaluate an action."""
@@ -34,7 +37,7 @@ def evaluate(game, language, action_string):
     if language.valid_action(action):
         game.evaluate(action)
     else:
-        print 'Invalid action'
+        print('Invalid action')
 
 def create_parser():
     """Create a command line argument parser."""
@@ -75,6 +78,9 @@ def create_parser():
 def main():
     """Play a game of calvinball."""
 
+    # Parse arguments and take action
+    args = create_parser().parse_args()
+
     # Load language
     with open(LANGUAGE_FILE) as language_fp:
         language = Language.load(language_fp)
@@ -82,8 +88,6 @@ def main():
     # Initialize game
     game = Game()
 
-    # Parse arguments and take action
-    args = create_parser().parse_args()
     if args.subcommand == 'add':
         add_rule(game, language, args.rule)
     elif args.subcommand == 'remove':
