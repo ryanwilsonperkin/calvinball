@@ -105,6 +105,8 @@ def main():
         LOGGER.info('could not read from game file "%s"', GAME_FILE)
         game = Game()
         LOGGER.info('created new game')
+    else:
+        LOGGER.info('loaded game from file "%s"', LANGUAGE_FILE)
 
     if args.subcommand == 'add':
         add_rule(game, language, args.rule)
