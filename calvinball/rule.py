@@ -20,12 +20,6 @@ class Rule(object):
                 self.preposition == action.preposition and
                 self.object == action.preposition)
 
-    def is_valid(self, language):
-        """Returns true if the action is valid according to the language."""
-        return (self.verb in language.verbs and
-                self.preposition in language.prepositions and
-                self.object in language.objects)
-
     @classmethod
     def parse(cls, rule_string):
         """Parse rule_string into MODAL VERB PREPOSITION OBJECT for new Rule."""

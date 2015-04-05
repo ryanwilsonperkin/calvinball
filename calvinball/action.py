@@ -8,12 +8,6 @@ class Action(object):
         self.preposition = preposition
         self.object = obj
 
-    def is_valid(self, language):
-        """Returns true if the action is valid according to the language."""
-        return (self.verb in language.verbs and
-                self.preposition in language.prepositions and
-                self.object in language.objects)
-
     @classmethod
     def parse(cls, action_string):
         """Parse action_string into VERB PREPOSITION OBJECT for new Action."""

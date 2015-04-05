@@ -15,17 +15,26 @@ GAME_FILE = os.path.join(DATA_DIR, 'calvinball.json')
 def add_rule(game, language, rule_string):
     """Add a new rule to the database."""
     rule = Rule.parse(rule_string)
-    game.add_rule(rule)
+    if language.valid_rule(rule):
+        game.add_rule(rule)
+    else:
+        print 'Invalid rule.'
 
 def remove_rule(game, language, rule_string):
     """Remove a rule from the database."""
     rule = Rule.parse(rule_string)
-    game.remove_rule(rule)
+    if language.valid_rule(rule):
+        game.remove_rule(rule)
+    else:
+        print 'Invalid rule.'
 
 def evaluate(game, language, action_string):
     """Evaluate an action."""
     action = Action.parse(action_string)
-    game.evaluate(action)
+    if language.valid_action(action):
+        game.evaluate(action)
+    else:
+        print 'Invalid action'
 
 def create_parser():
     """Create a command line argument parser."""

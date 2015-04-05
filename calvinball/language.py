@@ -27,6 +27,18 @@ class Language(object):
         """Returns true if object is valid."""
         return obj in self.objects
 
+    def valid_action(self, action):
+        """Returns true if the action is valid according to the language."""
+        return (action.verb in self.verbs and
+                action.preposition in self.prepositions and
+                action.object in self.objects)
+
+    def valid_rule(self, rule):
+        """Returns true if the action is valid according to the language."""
+        return (rule.verb in self.verbs and
+                rule.preposition in self.prepositions and
+                rule.object in self.objects)
+
 def load(json_file):
     """Load json file into a new Language object."""
     contents = json.load(json_file)
