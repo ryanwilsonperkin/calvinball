@@ -2,12 +2,13 @@
 
 import json
 
+from rule import Rule
+
 class Game(object):
     """State of a Calvinball game."""
 
-    def __init__(self, language):
+    def __init__(self):
         self.rules = []
-        self.language = language
 
     def add_rule(self, rule):
         """Add rule to game."""
@@ -34,3 +35,16 @@ class Game(object):
             default=lambda o: o.__dict__,
             indent=4
         )
+
+    @classmethod
+    def load(cls, game_fp):
+        """Load game instance from game_fp file."""
+        game = cls()
+        contents = json.load(game_fp)
+        for rule in contents[u'rules']:
+            modal = rule[u'modal']
+            verb = rule[u'verb']
+            preposition = rule[u'preposition']
+            obj = rule[u'object']
+            game.add_rule(Rule(modal, verb, preposition, obj))
+        return game

@@ -12,17 +12,17 @@ DATA_DIR = os.path.dirname(os.path.realpath(__file__))
 LANGUAGE_FILE = os.path.join(DATA_DIR, 'language.json')
 GAME_FILE = os.path.join(DATA_DIR, 'calvinball.json')
 
-def add_rule(game, rule_string):
+def add_rule(game, language, rule_string):
     """Add a new rule to the database."""
     rule = Rule.parse(rule_string)
     game.add_rule(rule)
 
-def remove_rule(game, rule_string):
+def remove_rule(game, language, rule_string):
     """Remove a rule from the database."""
     rule = Rule.parse(rule_string)
     game.remove_rule(rule)
 
-def evaluate(game, action_string):
+def evaluate(game, language, action_string):
     """Evaluate an action."""
     action = Action.parse(action_string)
     game.evaluate(action)
@@ -71,18 +71,16 @@ def main():
         language = load(language_fp)
 
     # Initialize game
-    game = Game(language)
+    game = Game()
 
     # Parse arguments and take action
     args = create_parser().parse_args()
     if args.subcommand == 'add':
-        add_rule(game, args.rule)
+        add_rule(game, language, args.rule)
     elif args.subcommand == 'remove':
-        remove_rule(game, args.rule)
+        remove_rule(game, language, args.rule)
     elif args.subcommand == 'evaluate':
-        evaluate(game, args.action)
-
-    print game.to_json()
+        evaluate(game, language, args.action)
 
 if __name__ == '__main__':
     main()
