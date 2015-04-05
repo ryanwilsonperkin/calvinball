@@ -2,6 +2,14 @@
 
 import json
 
+class InvalidRuleException(Exception):
+    """Thrown when a rule is not valid according to the language."""
+    pass
+
+class InvalidActionException(Exception):
+    """Thrown when a action is not valid according to the language."""
+    pass
+
 class Language(object):
     """Language of a Calvinball game."""
 
@@ -27,17 +35,28 @@ class Language(object):
         """Returns true if object is valid."""
         return obj in self.objects
 
-    def valid_action(self, action):
+    def is_valid_action(self, action):
         """Returns true if the action is valid according to the language."""
         return (action.verb in self.verbs and
                 action.preposition in self.prepositions and
                 action.object in self.objects)
 
-    def valid_rule(self, rule):
+    def is_valid_rule(self, rule):
         """Returns true if the action is valid according to the language."""
-        return (rule.verb in self.verbs and
+        return (rule.modal in self.modals and
+                rule.verb in self.verbs and
                 rule.preposition in self.prepositions and
                 rule.object in self.objects)
+
+    def validate_action(self, action):
+        """Throws InvalidActionException if action is invalid."""
+        if not self.is_valid_action(action):
+            raise InvalidActionException
+
+    def validate_rule(self, rule):
+        """Throws InvalidRuleException if rule is invalid."""
+        if not self.is_valid_rule(rule):
+            raise InvalidRuleException
 
     @classmethod
     def load(cls, language_fp):

@@ -9,7 +9,7 @@ import os
 
 from action import Action
 from game import Game, DuplicateRuleException, NonexistentRuleException
-from language import Language
+from language import Language, InvalidActionException, InvalidRuleException
 from rule import Rule
 
 DATA_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -23,35 +23,57 @@ LOGGER = logging.getLogger(__name__)
 
 def add_rule(game, language, rule_string):
     """Add a new rule to the database."""
-    rule = Rule.parse(rule_string)
-    if language.valid_rule(rule):
-        try:
-            game.add_rule(rule)
-        except DuplicateRuleException:
-            LOGGER.error('attempt to add duplicate rule "%s"', rule)
-            print('Rule exists.')
+    try:
+        rule = Rule.parse(rule_string)
+        language.validate_rule(rule)
+        game.add_rule(rule)
+    except ValueError:
+        LOGGER.error('syntax error in rule "%s"', rule_string)
+        print('syntax error: RULE is MODAL VERB PREPOSITION OBJECT')
+    except InvalidRuleException:
+        LOGGER.error('invalid token in rule "%s"', rule_string)
+        print('syntax error: invalid token in rule')
+    except DuplicateRuleException:
+        LOGGER.error('attempt to add duplicate rule "%s"', rule)
+        print('Rule exists.')
     else:
-        print('Invalid rule.')
+        LOGGER.info('successfully added "%s"', rule)
+        print('Rule added.')
 
 def remove_rule(game, language, rule_string):
     """Remove a rule from the database."""
-    rule = Rule.parse(rule_string)
-    if language.valid_rule(rule):
-        try:
-            game.remove_rule(rule)
-        except NonexistentRuleException:
-            LOGGER.error('attempt to remove nonexistent rule "%s"', rule)
-            print('Rule does not exits.')
+    try:
+        rule = Rule.parse(rule_string)
+        language.validate_rule(rule)
+        game.remove_rule(rule)
+    except ValueError:
+        LOGGER.error('syntax error in rule "%s"', rule_string)
+        print('syntax error: RULE is MODAL VERB PREPOSITION OBJECT')
+    except InvalidRuleException:
+        LOGGER.error('invalid token in rule "%s"', rule_string)
+        print('syntax error: invalid token in rule')
+    except NonexistentRuleException:
+        LOGGER.info('attempt to remove nonexistent rule "%s"', rule)
+        print('Rule does not exist.')
     else:
-        print('Invalid rule.')
+        LOGGER.info('successfully removed "%s"', rule)
+        print('Rule removed.')
 
 def evaluate(game, language, action_string):
     """Evaluate an action."""
-    action = Action.parse(action_string)
-    if language.valid_action(action):
+    try:
+        action = Action.parse(action_string)
+        language.validate_action(action)
         game.evaluate(action)
+    except ValueError:
+        LOGGER.error('syntax error in action "%s"', action_string)
+        print('syntax error: ACTION is VERB PREPOSITION OBJECT')
+    except InvalidActionException:
+        LOGGER.error('invalid token in action "%s"', action_string)
+        print('syntax error: invalid token in action')
     else:
-        print('Invalid action')
+        LOGGER.info('successfully evaluated "%s"', action)
+        print('Action succeeded.')
 
 def create_parser():
     """Create a command line argument parser."""
