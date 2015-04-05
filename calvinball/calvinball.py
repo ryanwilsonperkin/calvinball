@@ -27,18 +27,13 @@ def evaluate(game, action_string):
     action = Action.parse(action_string)
     game.evaluate(action)
 
-def main():
-    """Play a game of calvinball."""
-    # Create top level parser
+def create_parser():
+    """Create a command line argument parser."""
     parser = argparse.ArgumentParser(description=main.__doc__)
-
-    # Create parsers for subcommands
     subparsers = parser.add_subparsers(
         dest='subcommand',
         help='Available subcommands.'
     )
-
-    # Create parser for 'add-rule' subcommand
     parser_add = subparsers.add_parser(
         'add',
         help='Add a new rule to the database.'
@@ -48,8 +43,6 @@ def main():
         metavar='RULE',
         help='The rule to be added.'
     )
-
-    # Create parser for 'remove' subcommand
     parser_remove = subparsers.add_parser(
         'remove',
         help='Remove a rule from the database.'
@@ -59,8 +52,6 @@ def main():
         metavar='RULE',
         help='The rule to be removed'
     )
-
-    # Create parser for 'evaluate' subcommand
     parser_evaluate = subparsers.add_parser(
         'evaluate',
         help='Evaluate an action.'
@@ -70,6 +61,10 @@ def main():
         metavar='ACTION',
         help='The action to be evaluated.'
     )
+    return parser
+
+def main():
+    """Play a game of calvinball."""
 
     # Load language
     with open(LANGUAGE_FILE) as language_fp:
@@ -79,13 +74,15 @@ def main():
     game = Game(language)
 
     # Parse arguments and take action
-    args = parser.parse_args()
+    args = create_parser().parse_args()
     if args.subcommand == 'add':
         add_rule(game, args.rule)
     elif args.subcommand == 'remove':
         remove_rule(game, args.rule)
     elif args.subcommand == 'evaluate':
         evaluate(game, args.action)
+
+    print game.to_json()
 
 if __name__ == '__main__':
     main()

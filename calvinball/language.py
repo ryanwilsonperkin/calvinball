@@ -27,10 +27,6 @@ class Language(object):
         """Returns true if object is valid."""
         return obj in self.objects
 
-    def to_json(self):
-        """Serialize this Language instance to JSON."""
-        return json.dumps(self, default=lambda o: o.__dict__, indent=4)
-
 def load(json_file):
     """Load json file into a new Language object."""
     contents = json.load(json_file)

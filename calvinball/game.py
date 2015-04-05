@@ -27,4 +27,9 @@ class Game(object):
 
     def to_json(self):
         """Serialize this Game instance to JSON."""
-        return json.dumps(self, default=lambda o: o.__dict__, indent=4)
+        return json.dumps(
+            self,
+            sort_keys=True,
+            default=lambda o: o.__dict__,
+            indent=4
+        )
