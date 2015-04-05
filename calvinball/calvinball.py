@@ -5,7 +5,7 @@ import os
 
 from action import Action
 from game import Game
-from language import Language, load
+from language import Language
 from rule import Rule
 
 DATA_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -77,7 +77,7 @@ def main():
 
     # Load language
     with open(LANGUAGE_FILE) as language_fp:
-        language = load(language_fp)
+        language = Language.load(language_fp)
 
     # Initialize game
     game = Game()

@@ -39,11 +39,12 @@ class Language(object):
                 rule.preposition in self.prepositions and
                 rule.object in self.objects)
 
-def load(json_file):
-    """Load json file into a new Language object."""
-    contents = json.load(json_file)
-    modals = contents[u'modals']
-    verbs = contents[u'verbs']
-    prepositions = contents[u'prepositions']
-    objects = contents[u'objects']
-    return Language(modals, verbs, prepositions, objects)
+    @classmethod
+    def load(cls, language_fp):
+        """Load json file into a new Language object."""
+        contents = json.load(language_fp)
+        modals = contents[u'modals']
+        verbs = contents[u'verbs']
+        prepositions = contents[u'prepositions']
+        objects = contents[u'objects']
+        return cls(modals, verbs, prepositions, objects)
