@@ -8,8 +8,9 @@ from game import Game
 from language import Language, load
 from rule import Rule
 
-SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
-LANGUAGE_FILE = os.path.join(SCRIPT_DIR, 'language.json')
+DATA_DIR = os.path.dirname(os.path.realpath(__file__))
+LANGUAGE_FILE = os.path.join(DATA_DIR, 'language.json')
+GAME_FILE = os.path.join(DATA_DIR, 'calvinball.json')
 
 def add_rule(game, rule_string):
     """Add a new rule to the database."""

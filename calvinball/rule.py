@@ -1,5 +1,7 @@
 """Rule in a Calvinball game."""
 
+import json
+
 class Rule(object):
     """Rule in a Calvinball game."""
 
@@ -29,3 +31,7 @@ class Rule(object):
         return (self.verb in language.verbs and
                 self.preposition in language.prepositions and
                 self.object in language.objects)
+
+    def to_json(self):
+        """Serialize this Rule instance to JSON."""
+        return json.dumps(self, default=lambda o: o.__dict__, indent=4)
