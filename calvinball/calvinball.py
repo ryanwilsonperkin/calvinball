@@ -6,7 +6,6 @@ import argparse
 import logging
 import logging.config
 import os
-import sys
 
 from action import Action
 from game import Game
@@ -17,6 +16,10 @@ DATA_DIR = os.path.dirname(os.path.realpath(__file__))
 LANGUAGE_FILE = os.path.join(DATA_DIR, 'language.json')
 GAME_FILE = os.path.join(DATA_DIR, 'calvinball.json')
 LOG_CONFIG_FILE = os.path.join(DATA_DIR, 'logging.conf')
+
+# Load logging configuration
+logging.config.fileConfig(LOG_CONFIG_FILE)
+LOGGER = logging.getLogger(__name__)
 
 def add_rule(game, language, rule_string):
     """Add a new rule to the database."""
@@ -81,19 +84,27 @@ def create_parser():
 def main():
     """Play a game of calvinball."""
 
-    # Initialize logger
-    logging.config.fileConfig(LOG_CONFIG_FILE)
-    logger = logging.getLogger(__name__)
-
     # Parse arguments and take action
     args = create_parser().parse_args()
 
     # Load language
-    with open(LANGUAGE_FILE) as language_fp:
-        language = Language.load(language_fp)
+    try:
+        with open(LANGUAGE_FILE) as language_fp:
+            language = Language.load(language_fp)
+    except IOError:
+        LOGGER.error('could not read from language file "%s"', LANGUAGE_FILE)
+        raise
+    else:
+        LOGGER.info('loaded language from file "%s"', LANGUAGE_FILE)
 
     # Initialize game
-    game = Game()
+    try:
+        with open(GAME_FILE) as game_fp:
+            game = Game.load(game_fp)
+    except IOError:
+        LOGGER.info('could not read from game file "%s"', GAME_FILE)
+        game = Game()
+        LOGGER.info('created new game')
 
     if args.subcommand == 'add':
         add_rule(game, language, args.rule)
@@ -101,6 +112,15 @@ def main():
         remove_rule(game, language, args.rule)
     elif args.subcommand == 'evaluate':
         evaluate(game, language, args.action)
+
+    try:
+        with open(GAME_FILE, 'w') as game_fp:
+            game.save(game_fp)
+    except IOError:
+        LOGGER.error('could not write to game file "%s"', GAME_FILE)
+        raise
+    else:
+        LOGGER.info('saved game to file "%s"', GAME_FILE)
 
 if __name__ == '__main__':
     main()
