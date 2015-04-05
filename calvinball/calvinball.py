@@ -3,6 +3,8 @@
 from __future__ import print_function
 
 import argparse
+import logging
+import logging.config
 import os
 import sys
 
@@ -14,6 +16,7 @@ from rule import Rule
 DATA_DIR = os.path.dirname(os.path.realpath(__file__))
 LANGUAGE_FILE = os.path.join(DATA_DIR, 'language.json')
 GAME_FILE = os.path.join(DATA_DIR, 'calvinball.json')
+LOG_CONFIG_FILE = os.path.join(DATA_DIR, 'logging.conf')
 
 def add_rule(game, language, rule_string):
     """Add a new rule to the database."""
@@ -77,6 +80,10 @@ def create_parser():
 
 def main():
     """Play a game of calvinball."""
+
+    # Initialize logger
+    logging.config.fileConfig(LOG_CONFIG_FILE)
+    logger = logging.getLogger(__name__)
 
     # Parse arguments and take action
     args = create_parser().parse_args()
