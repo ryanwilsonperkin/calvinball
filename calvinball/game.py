@@ -12,6 +12,10 @@ class NonexistentRuleException(Exception):
     """Thrown when a rule is removed that doesn't exist."""
     pass
 
+class ForbiddenActionException(Exception):
+    """Thrown when a forbidden action is evaluated."""
+    pass
+
 class Game(object):
     """State of a Calvinball game."""
 
@@ -36,9 +40,14 @@ class Game(object):
         """Get list of current rules."""
         return self.rules
 
+    def is_forbidden(self, action):
+        """Return true if action is forbidden by rules."""
+        return any(rule.forbids(action) for rule in self.rules)
+
     def evaluate(self, action):
-        """Return true if action is allowed by current rules."""
-        return all(rule.allows(action) for rule in self.rules)
+        """Throws ForbiddenActionException if action is forbidden by rules."""
+        if self.is_forbidden(action):
+            raise ForbiddenActionException
 
     def save(self, json_fp):
         """Save json serialization of this game to json_fp."""

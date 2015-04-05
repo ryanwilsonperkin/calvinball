@@ -8,7 +8,8 @@ import logging.config
 import os
 
 from action import Action
-from game import Game, DuplicateRuleException, NonexistentRuleException
+from game import (Game, DuplicateRuleException, NonexistentRuleException,
+                  ForbiddenActionException)
 from language import Language, InvalidActionException, InvalidRuleException
 from rule import Rule
 
@@ -71,6 +72,9 @@ def evaluate(game, language, action_string):
     except InvalidActionException:
         LOGGER.error('invalid token in action "%s"', action_string)
         print('syntax error: invalid token in action')
+    except ForbiddenActionException:
+        LOGGER.error('action "%s" is forbidden by rules', action)
+        print('Action failed.')
     else:
         LOGGER.info('successfully evaluated "%s"', action)
         print('Action succeeded.')

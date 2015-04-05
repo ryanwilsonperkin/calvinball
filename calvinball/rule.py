@@ -24,7 +24,7 @@ class Rule(object):
         return (self.modal == "cannot" and
                 self.verb == action.verb and
                 self.preposition == action.preposition and
-                self.object == action.preposition)
+                self.object == action.object)
 
     @classmethod
     def parse(cls, rule_string):
