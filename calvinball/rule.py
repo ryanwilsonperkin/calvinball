@@ -15,6 +15,14 @@ class Rule(object):
     def __repr__(self):
         return '{0}({1})'.format(self.__class__, self.__dict__)
 
+    def __str__(self):
+        return '{0} {1} {2} {3}.'.format(
+            self.modal,
+            self.verb,
+            self.preposition,
+            self.object
+        ).capitalize()
+
     def allows(self, action):
         """Returns true if this rule allows the action."""
         return not self.forbids(action)

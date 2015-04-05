@@ -60,6 +60,11 @@ def remove_rule(game, language, rule_string):
         LOGGER.info('successfully removed "%s"', rule)
         print('Rule removed.')
 
+def list_rules(game):
+    """List rules of the game."""
+    for rule in game.get_rules():
+        print(rule)
+
 def evaluate(game, language, action_string):
     """Evaluate an action."""
     try:
@@ -113,6 +118,10 @@ def create_parser():
         metavar='ACTION',
         help='The action to be evaluated.'
     )
+    subparsers.add_parser(
+        'list',
+        help='List rules in the database.'
+    )
     return parser
 
 def main():
@@ -148,6 +157,8 @@ def main():
         remove_rule(game, language, args.rule)
     elif args.subcommand == 'evaluate':
         evaluate(game, language, args.action)
+    elif args.subcommand == 'list':
+        list_rules(game)
 
     try:
         with open(GAME_FILE, 'w') as game_fp:
