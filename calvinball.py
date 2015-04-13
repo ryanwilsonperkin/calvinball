@@ -57,7 +57,7 @@ def remove_rule(game, language, rule_string):
         LOGGER.error('invalid token in rule "%s"', rule_string)
         print('syntax error: invalid token in rule')
     except NonexistentRuleException:
-        LOGGER.info('attempt to remove nonexistent rule "%s"', rule)
+        LOGGER.error('attempt to remove nonexistent rule "%s"', rule)
         print('Rule does not exist.')
     else:
         LOGGER.info('successfully removed "%s"', rule)
