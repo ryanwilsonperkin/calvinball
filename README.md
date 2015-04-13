@@ -47,7 +47,8 @@ deployed on [Heroku][heroku] to get you up and running as quick as possible.
 
 The calvinball chat client interacts through the Slack chat client.
 Detailed instructions for configuring the chat bot with your own client can be
-found through [Slack's Github][slack-github].
+found through [Slack's Github][slack-github]. You will need a Slack account
+and an access token.
 
 [slack-github]: https://github.com/slackhq/hubot-slack
 
@@ -70,7 +71,4 @@ Then you can interact with calvinball by typing `calvinball help`.
     calvinball animate me <query> - The same thing as `image me`, except adds [snip]
     calvinball help - Displays all of the help commands that calvinball knows about.
     ...
-
-
-### Configuration
 
