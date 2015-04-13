@@ -8,12 +8,13 @@ import logging.config
 import os
 import sys
 
-from action import Action
-from game import (Game, DuplicateRuleException, NonexistentRuleException,
-                  ForbiddenActionException)
-from language import Language, InvalidActionException, InvalidRuleException
-from rule import Rule
-from server import serve
+from calvinball.action import Action
+from calvinball.game import (Game, DuplicateRuleException,
+                             NonexistentRuleException, ForbiddenActionException)
+from calvinball.language import (Language, InvalidActionException,
+                                 InvalidRuleException)
+from calvinball.rule import Rule
+from calvinball.server import serve
 
 DATA_DIR = os.path.dirname(os.path.realpath(__file__))
 LANGUAGE_FILE = os.path.join(DATA_DIR, 'language.json')
