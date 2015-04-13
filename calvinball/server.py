@@ -21,6 +21,8 @@ URLS = (
 
 APP = web.application(URLS, globals())
 
+SEMANTIC_ERROR, SYNTAX_ERROR, LOGICAL_ERROR = range(3)
+
 class AddRule:
     """Respond to POST /add requests."""
 
@@ -34,17 +36,17 @@ class AddRule:
             INSTANCE['game'].add_rule(rule)
         except ValueError:
             LOGGER.error('syntax error in rule "%s"', i.rule_string)
-
-            print('syntax error: RULE is MODAL VERB PREPOSITION OBJECT')
+            return error_response(SEMANTIC_ERROR,
+                                  'RULE is MODAL VERB PREPOSITION OBJECT')
         except InvalidRuleException:
             LOGGER.error('invalid token in rule "%s"', i.rule_string)
-            print('syntax error: invalid token in rule')
+            return error_response(SYNTAX_ERROR, 'invalid token in rule')
         except DuplicateRuleException:
             LOGGER.error('attempt to add duplicate rule "%s"', rule)
-            print('Rule exists.')
+            return error_response(LOGICAL_ERROR, 'rule exists')
         else:
             LOGGER.info('successfully added "%s"', rule)
-            print('Rule added.')
+            return success_response('Rule added.')
 
 class RemoveRule:
     """Respond to POST /remove requests."""
@@ -59,23 +61,25 @@ class RemoveRule:
             INSTANCE['game'].remove_rule(rule)
         except ValueError:
             LOGGER.error('syntax error in rule "%s"', i.rule_string)
-            print('syntax error: RULE is MODAL VERB PREPOSITION OBJECT')
+            return error_response(SEMANTIC_ERROR,
+                                  'RULE is MODAL VERB PREPOSITION OBJECT')
         except InvalidRuleException:
             LOGGER.error('invalid token in rule "%s"', i.rule_string)
-            print('syntax error: invalid token in rule')
+            return error_response(SYNTAX_ERROR, 'invalid token in rule')
         except NonexistentRuleException:
             LOGGER.info('attempt to remove nonexistent rule "%s"', rule)
-            print('Rule does not exist.')
+            return error_response(LOGICAL_ERROR, 'rule does not exist')
         else:
             LOGGER.info('successfully removed "%s"', rule)
-            print('Rule removed.')
+            return success_response('Rule removed.')
 
 class ListRules:
     """Respond to GET /list requests."""
 
     def GET(self):
         """List rules of the game."""
-        return INSTANCE['game'].get_rules()
+        rules = INSTANCE['game'].get_rules()
+        return success_response('\n'.join([str(rule) for rule in rules]))
 
 class Evaluate:
     """Respond to POST /evaluate requests."""
@@ -90,16 +94,42 @@ class Evaluate:
             INSTANCE['game'].evaluate(action)
         except ValueError:
             LOGGER.error('syntax error in action "%s"', i.action_string)
-            print('syntax error: ACTION is VERB PREPOSITION OBJECT')
+            return error_response(SEMANTIC_ERROR,
+                                  'ACTION is VERB PREPOSITION OBJECT')
         except InvalidActionException:
             LOGGER.error('invalid token in action "%s"', i.action_string)
-            print('syntax error: invalid token in action')
+            return error_response(SYNTAX_ERROR, 'invalid token in action')
         except ForbiddenActionException:
             LOGGER.error('action "%s" is forbidden by rules', action)
-            print('Action failed.')
+            return error_response(LOGICAL_ERROR, 'Action failed.')
         else:
             LOGGER.info('successfully evaluated "%s"', action)
-            print('Action succeeded.')
+            return success_response('Action succeeded.')
+
+def error_response(error_no, msg):
+    """Return json encoded error response."""
+    error_type = {
+        SEMANTIC_ERROR: 'semantic',
+        SYNTAX_ERROR: 'syntactic',
+        LOGICAL_ERROR: 'logical',
+    }.get(error_no)
+    response = {
+        'error': True,
+        'error_type': error_type,
+        'error_msg': msg,
+        'msg': '',
+    }
+    return json.dumps(response)
+
+def success_response(msg):
+    """Return json encoded success response."""
+    response = {
+        'error': False,
+        'error_type': '',
+        'error_msg': '',
+        'msg': msg,
+    }
+    return json.dumps(response)
 
 INSTANCE = dict()
 
