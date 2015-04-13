@@ -6,12 +6,14 @@ import argparse
 import logging
 import logging.config
 import os
+import sys
 
 from action import Action
 from game import (Game, DuplicateRuleException, NonexistentRuleException,
                   ForbiddenActionException)
 from language import Language, InvalidActionException, InvalidRuleException
 from rule import Rule
+from server import serve
 
 DATA_DIR = os.path.dirname(os.path.realpath(__file__))
 LANGUAGE_FILE = os.path.join(DATA_DIR, 'language.json')
@@ -122,6 +124,10 @@ def create_parser():
         'list',
         help='List rules in the database.'
     )
+    subparsers.add_parser(
+        'serve',
+        help='Launch server.'
+    )
     return parser
 
 def main():
@@ -159,6 +165,9 @@ def main():
         evaluate(game, language, args.action)
     elif args.subcommand == 'list':
         list_rules(game)
+    elif args.subcommand == 'serve':
+        sys.argv.remove('serve')
+        serve(language, game, GAME_FILE)
 
     try:
         with open(GAME_FILE, 'w') as game_fp:
