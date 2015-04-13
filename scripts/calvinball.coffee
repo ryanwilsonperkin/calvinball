@@ -34,10 +34,11 @@ module.exports = (robot) ->
 
   robot.hear /list/i, (res) ->
     robot.http("http://localhost:8080/list")
-      .get(data) (err, res, body) ->
+      .get() (err, res, body) ->
         if err
           res.send "Something went wrong #{err}"
           return
+        console.log(body)
         result = JSON.parse(body)
         if result.err
           res.send "error: #{result.err_msg}"
