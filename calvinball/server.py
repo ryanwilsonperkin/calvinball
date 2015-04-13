@@ -17,6 +17,7 @@ URLS = (
     '/add', 'AddRule',
     '/remove', 'RemoveRule',
     '/list', 'ListRules',
+    '/evaluate', 'Evaluate',
 )
 
 APP = web.application(URLS, globals())
